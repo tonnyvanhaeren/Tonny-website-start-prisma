@@ -1,0 +1,109 @@
+npm install prisma tsx --save-dev
+npm install @prisma/extension-accelerate @prisma/client
+
+
+npx prisma init --output ../src/generated/prisma
+
+remove text provider 'prisma-client' (geen .js)
+
+npx prisma migrade dev (name migration wordt gevraagd)
+
+npx prisma generate 
+
+npx prisma migrate dev --name init
+
+npx prisma migrate reset (not new)
+
+
+
+
+-- npx prisma
+
+Usage
+
+      $ prisma [command]
+
+    Commands
+
+                init   Set up Prisma for your app
+                 dev   Start a local Prisma Postgres server for development
+            generate   Generate artifacts (e.g. Prisma Client)
+                  db   Manage your database schema and lifecycle
+             migrate   Migrate your database
+              studio   Browse your data with Prisma Studio
+            validate   Validate your Prisma schema
+              format   Format your Prisma schema
+             version   Displays Prisma version info
+               debug   Displays Prisma debug info
+                 mcp   Starts an MCP server to use with AI development tools
+
+    Flags
+
+         --preview-feature   Run Preview Prisma commands
+         --help, -h          Show additional information about a command
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│  Optimize performance through connection pooling and caching with Prisma Accelerate  │
+│  and capture real-time events from your database with Prisma Pulse.                  │
+│  Learn more at https://pris.ly/cli/pdp                                               │
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+    Examples
+
+      Set up a new local Prisma Postgres `prisma dev`-ready project
+      $ prisma init
+
+      Start a local Prisma Postgres server for development
+      $ prisma dev
+
+      Generate artifacts (e.g. Prisma Client)
+      $ prisma generate
+
+      Browse your data
+      $ prisma studio
+
+      Create migrations from your Prisma schema, apply them to the database, generate artifacts (e.g. Prisma Client)
+      $ prisma migrate dev
+
+      Pull the schema from an existing database, updating the Prisma schema
+      $ prisma db pull
+
+      Push the Prisma schema state to the database
+      $ prisma db push
+
+      Validate your Prisma schema
+      $ prisma validate
+
+      Format your Prisma schema
+      $ prisma format
+
+      Display Prisma version info
+      $ prisma version
+
+      Display Prisma debug info
+      $ prisma debug
+
+
+
+-- npx prisma init --datasource-provider postgresql --output ../src/generated/prisma
+Fetching latest updates for this subcommand...
+
+✔ Your Prisma schema was created at prisma/schema.prisma
+✔ Your Prisma config was created at prisma.config.ts
+  You can now open them in your favorite editor.
+
+warn Prisma would have added DATABASE_URL but it already exists in .env
+warn You already have a .gitignore file. Don't forget to add `.env` in it to not commit any private information.
+Environment variables declared in the `.env` file are NOT automatically loaded by Prisma.
+See: https://pris.ly/prisma-config-env-vars.
+
+Next steps:
+1. Install `dotenv`, and add `import "dotenv/config";` to your `prisma.config.ts` file to load environment variables from `.env`.
+2. Run prisma dev to start a local Prisma Postgres server.
+3. Define models in the schema.prisma file.
+4. Run prisma migrate dev to migrate your local Prisma Postgres database.
+5. Tip: Explore how you can extend the ORM with scalable connection pooling, global caching, and a managed serverless Postgres database. Read: https://pris.ly/cli/beyond-orm
+
+More information in our documentation:
+https://pris.ly/d/getting-started
+    
