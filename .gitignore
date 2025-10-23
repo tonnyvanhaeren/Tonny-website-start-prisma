@@ -3,6 +3,6 @@ node_modules
 .DS_Store
 
 
-/src/generated/prisma
+# the seed admin user contains sensitive information
+seed.ts
 
-/src/generated/prisma
