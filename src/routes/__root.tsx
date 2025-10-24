@@ -9,6 +9,8 @@ import {
 } from '@tanstack/react-router';
 import NotFound from '~/components/NotFound';
 import appCss from '~/styles/app.css?url';
+import { Navbar } from '~/components/Navbar';
+import { NavbarUi } from '~/components/Navbar-chadui';
 
 export const Route = createRootRoute({
   head: () => ({
@@ -46,8 +48,12 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       <head>
         <HeadContent />
       </head>
-      <body>
-        {children}
+      <body className='bg-superhero-dark font-poppins'>
+        <header>
+          <NavbarUi />
+        </header>
+        <main className='text-white p-1'>{children}</main>
+
         <Scripts />
       </body>
     </html>
