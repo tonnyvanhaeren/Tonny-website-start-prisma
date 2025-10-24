@@ -96,6 +96,7 @@ export function NavbarUi() {
       </Button>
     </div>
   );
+
   return (
     <header className='border-b bg-superhero-light'>
       {/* Container: Use flex and justify-between to push main links and auth links apart */}

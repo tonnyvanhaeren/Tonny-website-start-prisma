@@ -10,7 +10,6 @@ import {
 import NotFound from '~/components/NotFound';
 import appCss from '~/styles/app.css?url';
 import { Navbar } from '~/components/Navbar';
-import { NavbarUi } from '~/components/Navbar-chadui';
 
 export const Route = createRootRoute({
   head: () => ({
@@ -50,7 +49,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body className='bg-superhero-dark font-poppins'>
         <header>
-          <NavbarUi />
+          <Navbar />
         </header>
         <main className='text-white p-1'>{children}</main>
 
