@@ -7,7 +7,7 @@ export function Navbar() {
 
   // This is placeholder logic.
   // In a real app, you'd get this from your auth context or state.
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
   return (
     <nav className='bg-orange-300 shadow-lg mb-4'>
@@ -72,7 +72,7 @@ export function Navbar() {
                   </Link>
                   <Link
                     to='/auth/register'
-                    className=' flex items-centertext-lg text-gray-700 px-1 py-1 font-medium hover:border-b-3 hover:border-orange-600'
+                    className=' flex items-center text-lg text-gray-700 px-1 py-1 font-medium hover:border-b-3 hover:border-orange-600'
                     activeProps={{
                       className: 'border-b-3 border-orange-600',
                     }}
