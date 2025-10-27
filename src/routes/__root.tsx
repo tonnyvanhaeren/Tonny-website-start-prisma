@@ -7,9 +7,12 @@ import {
   HeadContent,
   Scripts,
 } from '@tanstack/react-router';
+// import { AuthProvider, useAuth } from '~/contexts/auth';
+import { fetchSessionData } from '~/server/functions/user-server-fn';
 import NotFound from '~/components/NotFound';
 import appCss from '~/styles/app.css?url';
 import { Navbar } from '~/components/Navbar';
+import { Toaster } from 'react-hot-toast';
 
 export const Route = createRootRoute({
   head: () => ({
@@ -27,6 +30,13 @@ export const Route = createRootRoute({
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
   }),
+  beforeLoad: async () => {
+    const user = await fetchSessionData();
+
+    return {
+      user,
+    };
+  },
   component: RootComponent,
   notFoundComponent: () => {
     return <NotFound />;
@@ -42,6 +52,7 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+  const { user } = Route.useRouteContext();
   return (
     <html>
       <head>
@@ -51,7 +62,22 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <header>
           <Navbar />
         </header>
-        <main className='text-white p-1'>{children}</main>
+        <main className='text-white p-1'>
+          {user?.email}
+          {children}
+          <Toaster
+            position='bottom-center'
+            toastOptions={{
+              className: '',
+              style: {
+                fontSize: '12px',
+                border: '2px solid #713200',
+                padding: '16px',
+                color: '#713200',
+              },
+            }}
+          />
+        </main>
 
         <Scripts />
       </body>

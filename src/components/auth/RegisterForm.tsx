@@ -17,6 +17,7 @@ import { Label } from 'src/components/ui/label';
 import { registerSchema } from '~/lib/validation-schemas';
 import { any, z } from 'zod';
 import { registerUser } from '~/server/functions/user-server-fn';
+import { toast } from 'react-hot-toast';
 
 //zod schema for form validation
 // const registerSchema = z
@@ -65,11 +66,14 @@ const RegisterForm = () => {
       registerUser({ data: data.value })
         .then((user) => {
           console.log('User registered successfully:', user);
-          // Navigate to login or another page after successful registration
-          navigate({ to: '/auth/login' });
+          // Navigate to home
+          navigate({ to: '/' });
         })
         .catch((error) => {
-          console.error('Error registering user:', error);
+          toast.error(
+            error.message || 'Er is een fout opgetreden tijdens registratie.'
+          );
+          //console.error('Error registering user:', error);
           // Handle error (e.g., show error message to user)
         });
     },

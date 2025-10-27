@@ -14,8 +14,8 @@ npx prisma migrate dev --name init
 
 npx prisma migrate reset (not new)
 
-
-
+// seed commando for creating admin user
+npx prisma db seed
 
 -- npx prisma
 
