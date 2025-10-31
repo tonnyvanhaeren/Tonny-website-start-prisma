@@ -1,13 +1,57 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Home, LogIn, LogOut, UserPlus2Icon, UserIcon } from 'lucide-react';
+import { logoutFn } from '~/server/functions/user-server-fn';
+import { useAuth } from '../hooks/useAuth';
 
 export function Navbar() {
+  const navigate = useNavigate();
+  const { isAuthenticated, user, isLoading, isAdmin, hasRole, logout } =
+    useAuth();
+
+  // const context = useRouteContext({ from: '__root__' });
+  console.log('navigation -user ', user);
+
+  //const isAuthenticated = true;
+
+  let userLabel: string = '';
+
+  if (user) {
+    userLabel =
+      capitalizeFirstLetter(user.firstName) +
+      '.' +
+      capitalizeFirstLetter(user.lastName);
+  }
+
+  // const user = undefined;
+  // if (user) {
+  //   userLabel =
+  //     capitalizeFirstLetter(user.firstName) +
+  //     '.' +
+  //     capitalizeFirstLetter(user.lastName);
+  // }
+
+  function capitalizeFirstLetter(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   const [isOpen, setIsOpen] = useState(false);
+  // const isAuthenticated = false;
+
+  function logOutHandler() {
+    console.log('LOGOUT');
+    logoutFn()
+      .then(() => {
+        navigate({ to: '/', replace: true });
+      })
+      .catch((err) => {
+        console.log('error', err.message);
+      });
+  }
 
   // This is placeholder logic.
   // In a real app, you'd get this from your auth context or state.
-  const isAuthenticated = false;
+  // const isAuthenticated = false;
 
   return (
     <nav className='bg-orange-300 shadow-lg mb-4'>
@@ -49,11 +93,11 @@ export function Navbar() {
                       className: 'border-b-3 border-orange-600',
                     }}
                   >
-                    <UserIcon className='mr-2 h-4 w-4 text-orange-600' />{' '}
-                    Profile
+                    <UserIcon className='mr-2 h-4 w-4 text-orange-600' />
+                    {userLabel}
                   </Link>
                   <button
-                    onClick={() => console.log('Logging out...')}
+                    onClick={() => logOutHandler()}
                     className='flex items-center text-lg text-gray-700 px-1 py-1 font-medium hover:border-b-3 hover:border-orange-600'
                   >
                     <LogOut className='mr-2 h-4 w-4 text-orange-600' /> Logout
