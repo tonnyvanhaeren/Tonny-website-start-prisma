@@ -13,6 +13,7 @@ export type SessionUser = {
 
 export type User = {
   email: string;
+  phoneNumber?: string;
   id: string;
   lastName: string;
   firstName: string;

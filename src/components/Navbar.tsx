@@ -3,40 +3,36 @@ import { useState } from 'react';
 import { Home, LogIn, LogOut, UserPlus2Icon, UserIcon } from 'lucide-react';
 import { logoutFn } from '~/server/functions/user-server-fn';
 import { useAuth } from '../hooks/useAuth';
+import {
+  capitalizeFirstLetter,
+  capitalizeOnlyFirstLetter,
+} from '~/utils/tekst';
 
 export function Navbar() {
   const navigate = useNavigate();
   const { isAuthenticated, user, isLoading, isAdmin, hasRole, logout } =
     useAuth();
 
-  // const context = useRouteContext({ from: '__root__' });
-  console.log('navigation -user ', user);
-
-  //const isAuthenticated = true;
+  // console.log('navigation -user ', user);
 
   let userLabel: string = '';
 
   if (user) {
     userLabel =
-      capitalizeFirstLetter(user.firstName) +
-      '.' +
+      capitalizeOnlyFirstLetter(user.firstName) +
+      '. ' +
       capitalizeFirstLetter(user.lastName);
   }
 
-  // const user = undefined;
-  // if (user) {
-  //   userLabel =
-  //     capitalizeFirstLetter(user.firstName) +
-  //     '.' +
-  //     capitalizeFirstLetter(user.lastName);
+  // function capitalizeOnlyFirstLetter(str: string): string {
+  //   return str.charAt(0).toUpperCase();
   // }
 
-  function capitalizeFirstLetter(str: string): string {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+  // function capitalizeFirstLetter(str: string): string {
+  //   return str.charAt(0).toUpperCase() + str.slice(1);
+  // }
 
   const [isOpen, setIsOpen] = useState(false);
-  // const isAuthenticated = false;
 
   function logOutHandler() {
     console.log('LOGOUT');
@@ -48,10 +44,6 @@ export function Navbar() {
         console.log('error', err.message);
       });
   }
-
-  // This is placeholder logic.
-  // In a real app, you'd get this from your auth context or state.
-  // const isAuthenticated = false;
 
   return (
     <nav className='bg-orange-300 shadow-lg mb-4'>
@@ -69,16 +61,18 @@ export function Navbar() {
               <Home className='mr-2 h-4 w-4 text-orange-600' />
               MyApp
             </Link>
-            <Link
-              to='/admin/users'
-              className='flex items-center text-lg text-gray-700 px-1 py-1 font-medium hover:border-b-3 hover:border-orange-600'
-              activeProps={{
-                className: 'border-b-3 border-orange-600',
-              }}
-            >
-              {/* <Home className='mr-2 h-4 w-4 text-orange-600' /> */}
-              Users
-            </Link>
+            {isAdmin && (
+              <Link
+                to='/admin/users'
+                className='flex items-center text-lg text-gray-700 px-1 py-1 font-medium hover:border-b-3 hover:border-orange-600'
+                activeProps={{
+                  className: 'border-b-3 border-orange-600',
+                }}
+              >
+                {/* <Home className='mr-2 h-4 w-4 text-orange-600' /> */}
+                Users
+              </Link>
+            )}
           </div>
 
           {/* Desktop Nav Links */}

@@ -4,15 +4,19 @@ import { type ReactNode } from 'react';
 import {
   createRootRouteWithContext,
   Outlet,
-  createRootRoute,
   HeadContent,
   Scripts,
 } from '@tanstack/react-router';
 
+import { TanStackDevtools } from '@tanstack/react-devtools';
+import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
+import { TanStackRouterDevtoolsPanel } from '@TanStack/react-router-devtools';
+import { Toaster } from 'react-hot-toast';
+
 import NotFound from '~/components/NotFound';
 import appCss from '~/styles/app.css?url';
 import { Navbar } from '~/components/Navbar';
-import { Toaster } from 'react-hot-toast';
+
 import { getCurrentUserSFN } from '../server/functions/user-server-fn';
 import { AuthState } from '../hooks/useAuth';
 
@@ -24,7 +28,7 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   beforeLoad: async () => {
     const user = await getCurrentUserSFN();
-    console.log('Root Route beforeload - user : ', user);
+    // console.log('Root Route beforeload - user : ', user);
     return { user };
   },
   head: () => ({
@@ -80,6 +84,21 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                 color: '#713200',
               },
             }}
+          />
+          <TanStackDevtools
+            config={{ position: 'bottom-right' }}
+            plugins={[
+              // {
+              //   name: 'TanStack Query',
+              //   render: <ReactQueryDevtoolsPanel />,
+              //   defaultOpen: true,
+              // },
+              {
+                name: 'TanStack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+                defaultOpen: false,
+              },
+            ]}
           />
         </main>
 

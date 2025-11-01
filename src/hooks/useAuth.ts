@@ -1,8 +1,10 @@
 // src/hooks/useAuth.ts
 
+//TODO: Refactor this to use only logout and clear login
+
 import { useNavigate, useRouteContext } from '@tanstack/react-router';
 import { UserRole, User } from '../types/auth';
-import { loginFnc, logoutFnc } from '../utils/authServerFns'; // Your server functions
+import { loginFnc, logoutFnc } from '../server/authServerFns'; // Your server functions
 
 export type AuthState = {
   isAuthenticated: boolean;
@@ -27,7 +29,7 @@ export const useAuth = (): AuthState => {
     user: User | null;
   };
 
-  console.log('hooks: useAuth - user', user);
+  // console.log('hooks: useAuth - user', user);
 
   // The router provides a loading state for its loaders
   const { isFetching } = useRouteContext({ from: '__root__' }) as {

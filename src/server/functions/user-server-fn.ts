@@ -5,7 +5,6 @@ import { useAppSession } from '~/utils/session';
 import { User } from '~/types/auth';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
-import { redirect } from '@tanstack/react-router';
 
 export const getUsers = createServerFn({ method: 'GET' }).handler(async () => {
   return prisma.user.findMany({});
@@ -46,9 +45,23 @@ export const getUserById = createServerFn({ method: 'GET' })
         lastName: true,
         email: true,
         role: true,
+        phoneNumber: true,
       },
     });
-    return foundUser;
+
+    if (!foundUser) {
+      return null;
+    }
+
+    const returnUser: User | null = {
+      id: foundUser?.id,
+      firstName: foundUser?.firstName,
+      lastName: foundUser?.lastName,
+      email: foundUser?.email,
+      phoneNumber: foundUser?.phoneNumber || '',
+      role: foundUser?.role,
+    };
+    return returnUser;
   });
 
 // Registration server function
@@ -73,7 +86,7 @@ export const registerUser = createServerFn({ method: 'POST' })
           firstName: firstname,
           lastName: lastname,
           email: email,
-          phoneNumber: phoneNumber,
+          phoneNumber: phoneNumber || '',
           password: hashedPassword,
         },
         select: {
