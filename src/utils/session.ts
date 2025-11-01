@@ -3,11 +3,6 @@ import { useSession } from '@tanstack/react-start/server';
 
 type SessionUser = {
   userId: string;
-  email: string;
-  phoneNumber: string;
-  firstName: string;
-  lastName: string;
-  role: string;
 };
 
 export function useAppSession() {
@@ -31,29 +26,3 @@ export function useAppSession() {
     },
   });
 }
-// import { useSession } from '@tanstack/react-start/server';
-// import type { User } from 'src/generated/prisma/client.js';
-
-// type SessionUser = {
-//   userEmail: User['email'];
-// };
-
-// export function useAppSession() {
-//   return useSession<SessionUser>({
-//     password: 'ChangeThisBeforeShippingToProdOrYouWillBeFired',
-//   });
-// }
-
-// export function useAppSession() {
-//   return useSession<SessionData>({
-//     // Session configuration
-//     name: 'app-session',
-//     password: process.env.SESSION_SECRET!, // At least 32 characters
-//     // Optional: customize cookie settings
-//     cookie: {
-//       secure: process.env.NODE_ENV === 'production',
-//       sameSite: 'lax',
-//       httpOnly: true,
-//     },
-//   });
-// }

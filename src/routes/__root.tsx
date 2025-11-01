@@ -1,20 +1,32 @@
 // src/routes/__root.tsx
 /// <reference types="vite/client" />
-import type { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import {
+  createRootRouteWithContext,
   Outlet,
   createRootRoute,
   HeadContent,
   Scripts,
 } from '@tanstack/react-router';
-// import { AuthProvider, useAuth } from '~/contexts/auth';
-import { fetchSessionData } from '~/server/functions/user-server-fn';
+
 import NotFound from '~/components/NotFound';
 import appCss from '~/styles/app.css?url';
 import { Navbar } from '~/components/Navbar';
 import { Toaster } from 'react-hot-toast';
+import { getCurrentUserSFN } from '../server/functions/user-server-fn';
+import { AuthState } from '../hooks/useAuth';
 
-export const Route = createRootRoute({
+interface MyRouterContext {
+  auth: AuthState;
+  user: Awaited<ReturnType<typeof getCurrentUserSFN>>; // Updated function name
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: async () => {
+    const user = await getCurrentUserSFN();
+    console.log('Root Route beforeload - user : ', user);
+    return { user };
+  },
   head: () => ({
     meta: [
       {
@@ -30,13 +42,7 @@ export const Route = createRootRoute({
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
   }),
-  beforeLoad: async () => {
-    const user = await fetchSessionData();
-
-    return {
-      user,
-    };
-  },
+  pendingComponent: () => <div>Loading Application...</div>,
   component: RootComponent,
   notFoundComponent: () => {
     return <NotFound />;
@@ -52,7 +58,6 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
-  const { user } = Route.useRouteContext();
   return (
     <html>
       <head>
@@ -63,7 +68,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
           <Navbar />
         </header>
         <main className='text-white p-1'>
-          {user?.email}
           {children}
           <Toaster
             position='bottom-center'

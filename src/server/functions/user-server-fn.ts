@@ -1,9 +1,11 @@
 import prisma from '../../lib/prisma';
 import { createServerFn } from '@tanstack/react-start';
-import { registerSchema } from '~/lib/validation-schemas';
+import { loginSchema, registerSchema } from '~/lib/validation-schemas';
 import { useAppSession } from '~/utils/session';
+import { User } from '~/types/auth';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import { redirect } from '@tanstack/react-router';
 
 export const getUsers = createServerFn({ method: 'GET' }).handler(async () => {
   return prisma.user.findMany({});
@@ -14,17 +16,12 @@ export const fetchSessionData = createServerFn({ method: 'GET' }).handler(
     // We need to auth on the server so we have access to secure cookies
     const session = await useAppSession();
 
-    if (!session.data.email) {
+    if (!session.data.userId) {
       return null;
     }
 
     return {
       userId: session.data.userId,
-      email: session.data.email,
-      phoneNumber: session.data.phoneNumber,
-      firstName: session.data.firstName,
-      lastName: session.data.lastName,
-      role: session.data.role,
     };
   }
 );
@@ -43,6 +40,13 @@ export const getUserById = createServerFn({ method: 'GET' })
   .handler(async ({ data }) => {
     const foundUser = await prisma.user.findUnique({
       where: { id: data.id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: true,
+      },
     });
     return foundUser;
   });
@@ -95,11 +99,6 @@ export const registerUser = createServerFn({ method: 'POST' })
       const session = await useAppSession();
       await session.update({
         userId: newUser.id,
-        email: newUser.email,
-        phoneNumber: newUser.phoneNumber || '',
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        role: newUser.role,
       });
 
       return newUser;
@@ -107,41 +106,41 @@ export const registerUser = createServerFn({ method: 'POST' })
   );
 
 // Login server function
-export const loginFn = createServerFn({ method: 'POST' })
-  .inputValidator(registerSchema)
+export const login = createServerFn({ method: 'POST' })
+  .inputValidator(loginSchema)
   .handler(async ({ data }) => {
     // Verify credentials (replace with your auth logic)
     const user = await authenticateUser(data.email, data.password);
 
+    // if (!user) {
+    //   return { error: 'Invalid credentials' };
+    // }
+
     if (!user) {
-      return { error: 'Invalid credentials' };
+      throw new Error('Email or wachtwoord onjuist!');
     }
 
     // Create session
     const session = await useAppSession();
     await session.update({
       userId: user.id,
-      email: user.email,
-      phoneNumber: user.phoneNumber || '',
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
     });
 
+    return { success: true };
     // Redirect to protected area
-    throw redirect({ to: '/dashboard' });
+    //throw redirect({ to: '/dashboard' });
   });
 
 // Logout server function
 export const logoutFn = createServerFn({ method: 'POST' }).handler(async () => {
   const session = await useAppSession();
   await session.clear();
-
-  throw redirect({ to: '/' });
 });
 
 // Get current user
-export const getCurrentUserFn = createServerFn({ method: 'GET' }).handler(
+/** get the session data if any and find the user if any */
+//** Returns null or User  no password or timestamps */
+export const getCurrentUserSFN = createServerFn({ method: 'GET' }).handler(
   async () => {
     const session = await useAppSession();
     const userId = session.data.userId;
@@ -150,9 +149,9 @@ export const getCurrentUserFn = createServerFn({ method: 'GET' }).handler(
       return null;
     }
 
-    const user = await getUserById({ data: { id: userId } });
+    const returnUser: User | null = await getUserById({ data: { id: userId } });
 
-    return user;
+    return returnUser;
   }
 );
 

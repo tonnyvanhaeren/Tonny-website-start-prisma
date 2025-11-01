@@ -20,3 +20,8 @@ export const registerSchema = z
     message: 'Wachtwoorden komen niet overeen',
     path: ['confirm_password'],
   });
+
+export const loginSchema = z.object({
+  email: z.email('Ongeldig e-mailadres'),
+  password: z.string().min(8, 'Wachtwoord moet minimaal 6 tekens bevatten'),
+});

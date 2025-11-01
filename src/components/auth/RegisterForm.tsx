@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useEffect, useRef } from 'react';
 import { useForm } from '@tanstack/react-form';
@@ -15,7 +14,7 @@ import {
 import { Input } from 'src/components/ui/input';
 import { Label } from 'src/components/ui/label';
 import { registerSchema } from '~/lib/validation-schemas';
-import { any, z } from 'zod';
+import { z } from 'zod';
 import { registerUser } from '~/server/functions/user-server-fn';
 import { toast } from 'react-hot-toast';
 
