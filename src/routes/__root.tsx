@@ -19,6 +19,9 @@ import { Navbar } from '~/components/Navbar';
 
 import { getCurrentUserSFN } from '../server/functions/user-server-fn';
 import { AuthState } from '../hooks/useAuth';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 interface MyRouterContext {
   auth: AuthState;
@@ -55,9 +58,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootComponent() {
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <QueryClientProvider client={queryClient}>
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+      {/* <ReactQueryDevtoolsPanel /> */}
+    </QueryClientProvider>
   );
 }
 
@@ -88,11 +94,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
           <TanStackDevtools
             config={{ position: 'bottom-right' }}
             plugins={[
-              // {
-              //   name: 'TanStack Query',
-              //   render: <ReactQueryDevtoolsPanel />,
-              //   defaultOpen: true,
-              // },
+              {
+                name: 'TanStack Query',
+                render: <ReactQueryDevtoolsPanel />,
+                defaultOpen: false,
+              },
               {
                 name: 'TanStack Router',
                 render: <TanStackRouterDevtoolsPanel />,

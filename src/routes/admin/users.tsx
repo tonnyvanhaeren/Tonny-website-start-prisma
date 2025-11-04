@@ -1,21 +1,28 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getUsers } from '../../server/functions/user-server-fn';
+import { useQuery } from '@tanstack/react-query';
 
 export const Route = createFileRoute('/admin/users')({
   component: RouteComponent,
-  loader: () => {
-    return getUsers();
-  },
 });
 
 function RouteComponent() {
-  const users = Route.useLoaderData();
+  const { data, isPending, isLoading, error, isError } = useQuery({
+    queryKey: ['users'],
+    queryFn: getUsers,
+  });
+
+  if (isPending) return <div>isPending...</div>;
+  if (isLoading) return <div>isLoading...</div>;
+  if (isError) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <div>
       <h1>Users</h1>
       <ul>
-        {users.map((user) => (
+        {data?.map((user) => (
           <li key={user.id}>
             {user.firstName} {user.lastName}
           </li>
